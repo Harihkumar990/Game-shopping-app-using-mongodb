@@ -8,6 +8,7 @@ const initialvalue ={
         email:"",
         password:""
     },
+    totalpurchase:localStorage.getItem("totalpurchase") || "",
     newuser:{
         username:"",
         email:"",
@@ -23,7 +24,8 @@ const initialvalue ={
     array:[],
     cartdata:"",
     total:"",
-    message:""
+    message:"",
+    admindata:""
 
 
 }
@@ -34,7 +36,7 @@ const AuthContext = createContext(initialvalue);
 const AuthProvider = ({children}) =>{
 
     
-    const [{userlogin,total,message,array,cartdata,productdata,userregister,newuser,userlogindata,idToken,getuserdata},dispatch] = useReducer(browsereducer,initialvalue);
+    const [{totalpurchase,userlogin,admindata,total,message,array,cartdata,productdata,userregister,newuser,userlogindata,idToken,getuserdata},dispatch] = useReducer(browsereducer,initialvalue);
 
     
     
@@ -75,9 +77,13 @@ const AuthProvider = ({children}) =>{
                 body:JSON.stringify(data)
             })
             if(response.ok){
-                const {msg,idToken} = await response.json();
-                
-                return {msg,idToken}
+                const {msg,idToken,totalpurchased} = await response.json();
+                dispatch({
+                    type:"TOTAL_PURCHASE",
+                    payload:totalpurchased
+                })
+                localStorage.setItem("totalpurchase",totalpurchased)
+                return {msg,idToken,totalpurchase}
             }else{
                 const {msg} =await response.json();
                 return msg
@@ -229,7 +235,7 @@ const AuthProvider = ({children}) =>{
     
 
     return(
-        <AuthContext.Provider value = {{signup,Empty,message,order,Remove,UpdateCart,sendcartdata,total,cartdata,array,productdata,userlogin,userregister,newuser,getuserdata,userlogindata,idToken,dispatch,login}} >
+        <AuthContext.Provider value = {{totalpurchase,admindata,signup,Empty,message,order,Remove,UpdateCart,sendcartdata,total,cartdata,array,productdata,userlogin,userregister,newuser,getuserdata,userlogindata,idToken,dispatch,login}} >
             {children}
         </AuthContext.Provider>
     )

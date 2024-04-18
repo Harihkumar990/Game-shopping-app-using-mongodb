@@ -29,6 +29,11 @@ const browsereducer = (state,{type,payload}) =>{
                     [payload[0]]:payload[1]
                 }
             }
+        case "TOTAL_PURCHASE":
+            return{
+                ...state,
+                totalpurchase:localStorage.getItem("totalpurchase") || payload
+            }
         
         case "USERAUTH":
             return{
@@ -62,6 +67,7 @@ const browsereducer = (state,{type,payload}) =>{
         }
         case "LOGOUT":
             localStorage.removeItem("token")
+            localStorage.removeItem("totalpurchase")
             return{
 
                 ...state,
@@ -72,7 +78,8 @@ const browsereducer = (state,{type,payload}) =>{
                 },
                 cartdata:{
                     id:""
-                }
+                },
+                totalpurchase:""
             }
         case "PRODUCTS":
             return{
@@ -97,7 +104,13 @@ const browsereducer = (state,{type,payload}) =>{
                 ...state,
                 message:payload
             }
-
+        case "ADMIN":{
+            console.log(payload)
+            return{
+                ...state,
+                admindata:payload
+            }
+        }
             
         default:
             return state;

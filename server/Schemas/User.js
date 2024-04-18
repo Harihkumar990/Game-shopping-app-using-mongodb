@@ -4,7 +4,7 @@ const SignupSchema = new Schema({
     username:{type:String,require:true},
     email:{type:String,require:true},
     phonenumber:{type:String,require:true},
-    password:{type:String,require:true}
+    password:{type:String,require:true},
 }) 
 
 
@@ -31,6 +31,7 @@ SignupSchema.methods.genratejsonwebtoken = async function(){
         console.log(error)
     }
 }
+
 
 
 

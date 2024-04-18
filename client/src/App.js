@@ -4,8 +4,10 @@ import Error from "./Error";
 import { useAuthContext } from "./contextandreducer/context";
 import { Routes,Route } from "react-router";
 import Product from "./products/Product";
+import Admin from "./admin/Admin";
 const App = () =>{
   const {array} = useAuthContext();
+  
   return(
     <Fragment>
         <main className="bg-gray-600" >
@@ -15,6 +17,7 @@ const App = () =>{
               {
                 array.length>0 && <Route path="/games/:id" element ={<Product/>}/>
               }
+              <Route path="/admin" element ={<Admin/>}  />
               <Route path="*" element = {<Error/>} />
               
           </Routes>

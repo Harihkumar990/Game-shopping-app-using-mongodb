@@ -1,5 +1,5 @@
 const UserSchema = require("../Schemas/User");
-
+const GameSchema = require("../Schemas/GameSchema");
 const SignupControl = async (req,res,next) =>{
     try {
                 
@@ -41,6 +41,16 @@ const LoginUser = async (req,res,next) =>{
         const {email,password} = req.body
     
         const isUserExist = await UserSchema.SignupModel.find({email:email});
+        let user = await GameSchema.OrderModel.find({email:email});
+        let purchase;
+        if(!user){
+            purchase = 0;
+        }else{
+            purchase = user.reduce((acc,curr)=>{
+                return acc + (Number(curr.DiscoutedPrice) * Number(curr.quantity))
+            },0)
+        }
+        
       
         if(isUserExist.length<=0){
             const error = {
@@ -52,7 +62,7 @@ const LoginUser = async (req,res,next) =>{
         const checkPassword = await isUserExist[0].ComparePassword(password)
         
         if(checkPassword){
-            return res.status(200).json({msg:"login Successfull",idToken:await isUserExist[0].genratejsonwebtoken(),ID:isUserExist[0]._id.toString()})
+            return res.status(200).json({totalpurchased:purchase,msg:"login Successfull",idToken:await isUserExist[0].genratejsonwebtoken(),ID:isUserExist[0]._id.toString()})
         }
 
         const error = {
@@ -72,12 +82,16 @@ const User = async (req,res,next) =>{
     try {
 
         const userdata = req.user;
-
-        if(!userdata){
+       
+        
+        if(!userdata.email){
             return res.status(500).json({msg:"User have to login again"});
+        }else{
+           
+            return res.status(201).json({userdata});
+    
         }
-        return res.status(201).json({userdata});
-
+       
         
     } catch (err) {
         const error = {

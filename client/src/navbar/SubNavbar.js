@@ -1,8 +1,10 @@
 import { Fragment, useEffect, useRef } from "react";
 import gsap from "gsap";
+
 import { useAuthContext } from "../contextandreducer/context";
-import { NavLink } from "react-router-dom";
+import { NavLink,useNavigate } from "react-router-dom";
 const SubNavbar = () =>{
+    const navigate = useNavigate();
     const {dispatch,idToken,getuserdata} = useAuthContext();
     const comp = useRef();
     useEffect(()=>{
@@ -52,6 +54,9 @@ const SubNavbar = () =>{
        
         getdata()
     },[idToken,dispatch])
+    const enteradminpanel = () =>{
+        navigate("/admin")
+    }
     
     return(
         <Fragment>
@@ -74,7 +79,9 @@ const SubNavbar = () =>{
                 })}  className="animate text-2xl  2xl:text-8xl  text-white font-bold rounded-lg hover:shadow-lg hover:shadow-white hover:scale-105 cursor-pointer px-3 p-1 bg-red-600" >RPG</button></NavLink>
                 {
                     idToken  ?<>
-                        <span className= "text-center  2xl:text-8xl  cursor-pointer animate border font-bold rounded-lg hover:shadow-lg hover:scale-105 bg-red-500 hover:shadow-white" >{getuserdata.username}</span>
+                        {
+                            getuserdata.username === "Harish Admin" ? <span onClick={enteradminpanel}  className= "text-center  2xl:text-8xl  cursor-pointer animate border font-bold rounded-lg hover:shadow-lg hover:scale-105 bg-red-500 hover:shadow-white" >{getuserdata.username}</span> :<span  className= "text-center  2xl:text-8xl  cursor-pointer animate border font-bold rounded-lg hover:shadow-lg hover:scale-105 bg-red-500 hover:shadow-white" >{getuserdata.username}</span>
+                        }
                         <span onClick={()=>{
                             dispatch({
                                 type:"LOGOUT",
